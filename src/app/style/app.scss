@@ -133,8 +133,52 @@
     font: normal 14px $mainFont;
     color: $normalsort;
     margin: 0 0 0 40px;
+    cursor: pointer;
     &.active {
         color: $compBg;
         text-decoration: underline;
     }
+}
+.header-right-area {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 10px 0 0;
+}
+.search-holder {
+    width:200px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 40px 0 15px;
+}
+.search-box {
+    width: calc(100% - 40px);
+    border: 0;
+    box-shadow: none;
+    border-bottom: 1px solid $brandWhite;
+    color: $brandWhite;
+    height: 30px;
+    padding: 0 ;
+    background: none;
+    &:focus {
+        outline: none;
+    }
+}
+.cart-holder-top {
+    position: relative;
+}
+.cart-alert {
+    width: 15px;
+    height: 15px;
+    background: $alertRed;
+    color: $brandWhite;
+    font: bold 11px/15px $mainFontBold;
+    border-radius: 50%;
+    position: absolute;
+    right:-8px;
+    top:-6px;
+    z-index: 5;
+    text-align: center;
+
 }

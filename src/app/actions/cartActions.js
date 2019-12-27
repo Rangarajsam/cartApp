@@ -39,3 +39,18 @@ export const getItemsAction = (callback) => dispatch => {
         callback && callback(response);
     });
 }
+
+
+export const sortByAction = (sortType) => ({
+    type:generalConstants.sort,
+    payload:{
+        sortType
+    }
+});
+
+export const searchCartAction = (searchText) => ({
+    type:generalConstants.searchCart,
+    payload:{
+        searchText
+    }
+});

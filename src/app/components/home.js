@@ -1,9 +1,15 @@
 import React, {Component, useRef} from 'react';
 import { connect } from "react-redux";
 import {Link} from 'react-router-dom';
-import { getItemsAction } from '../actions/cartActions';
+import cartContext from '../contexts/cartContext';
+import { getItemsAction,sortByAction,searchCartAction } from '../actions/cartActions';
 import Loading from '../images/loader-icon.svg';
 import CartItem from './cartItem';
+import Sort from './sort';
+import generalConstants from '../constants/generalConstants';
+import Header from '../components/header';
+
+
  class Home extends Component {
      constructor(props) {
         super(props);
@@ -12,15 +18,18 @@ import CartItem from './cartItem';
          }
      }
      componentDidMount(){
-        const {getItemsAction} = this.props;
+        const {getItemsAction,sortByAction} = this.props;
         getItemsAction((response) => {
+            sortByAction(generalConstants.sortHightoLow);
         })
      }
      render(){
-         const {carts,getItemsLoaderState} = this.props;
+         const {carts,getItemsLoaderState,sortByAction,sortType,searchCartAction} = this.props;
          console.log('Carts',carts);
-
         return (
+            <cartContext.Provider value={{sortByAction,sortType,searchCartAction}}>
+                
+            <Header></Header>
             <section className="cart-main-area">
                {getItemsLoaderState.fetching && !getItemsLoaderState.fetched && <div className="loader">
                     <img src={Loading}/>
@@ -29,18 +38,14 @@ import CartItem from './cartItem';
                     <h1 className="gen-heading">Filters</h1>
                 </div>
                 <div className="cart-area">
-                    <div className="sort-area">
-                    <h1 className="gen-heading">Sort By</h1>
-                        <div className="sort-title">Price -- High Low</div>
-                        <div className="sort-title">Price -- Low High</div>
-                        <div className="sort-title">Discount</div>
-                    </div>
+                    <Sort></Sort>
                         { carts && carts.length > 0 && carts.map(cart => (
                             <CartItem cart={cart} key={cart.id}></CartItem> 
                         ))}
 
                 </div>
             </section>
+            </cartContext.Provider>
         );
      }
    
@@ -49,7 +54,8 @@ import CartItem from './cartItem';
 const mapStateToProps = state => {
     return {
         carts:state.cartsReducer.carts,
-        getItemsLoaderState:state.cartsReducer.getItemsLoaderState
+        getItemsLoaderState:state.cartsReducer.getItemsLoaderState,
+        sortType:state.cartsReducer.sortType
     }
 };
 
@@ -57,6 +63,12 @@ const mapDispatchToProps = dispatch => {
     return {
         getItemsAction : (callback) => {
             dispatch(getItemsAction(callback));
+        },
+        sortByAction: (type) => {
+            dispatch(sortByAction(type));
+        },
+        searchCartAction: (text) => {
+            dispatch(searchCartAction(text));
         }
     }
 }
