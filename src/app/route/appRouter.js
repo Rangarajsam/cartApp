@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route,Switch} from 'react-router-dom';
 import Home from '../components/home';
 import NotFound from '../components/notFound';
 import Footer from '../components/footer';
+import Summary from '../components/summary';
 import {Provider} from 'react-redux';
 
 const AppRouter = ({store}) => (
@@ -10,7 +11,7 @@ const AppRouter = ({store}) => (
         <Router>
             <Switch>
                 <Route path="/" component={Home} exact={true}/>
-                {/* <Route path="/total" component={Movies} exact={true}/> */}
+                <Route path="/summary" component={Summary} exact={true}/>
                 <Route  component={NotFound} />
             </Switch>
             <Footer></Footer>

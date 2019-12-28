@@ -3,8 +3,6 @@
  import { faSearch } from '@fortawesome/free-solid-svg-icons';
  import cartContext from '../contexts/cartContext';
 
-
-
  const Search = () => {
      const [search,setSearch] = useState(false);
        const {searchCartAction} = useContext(cartContext);

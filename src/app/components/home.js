@@ -1,8 +1,7 @@
-import React, {Component, useRef} from 'react';
+import React, {Component} from 'react';
 import { connect } from "react-redux";
-import {Link} from 'react-router-dom';
 import cartContext from '../contexts/cartContext';
-import { getItemsAction,sortByAction,searchCartAction,filterCartAction } from '../actions/cartActions';
+import { getItemsAction,sortByAction,searchCartAction,filterCartAction,addtoCartAction } from '../actions/cartActions';
 import Loading from '../images/loader-icon.svg';
 import CartItem from './cartItem';
 import Sort from './sort';
@@ -24,10 +23,13 @@ import Filter from './filter';
         })
      }
      render(){
-         const {carts,getItemsLoaderState,sortByAction,sortType,searchCartAction,filterCartAction} = this.props;
+         const {carts,getItemsLoaderState,sortByAction,sortType,searchCartAction,
+            filterCartAction,addtoCartAction,cartsAdded,history} = this.props;
          console.log('Carts',carts);
+         
         return (
-            <cartContext.Provider value={{carts,sortByAction,sortType,searchCartAction,filterCartAction}}>
+            <cartContext.Provider value={{carts,sortByAction,sortType,searchCartAction,filterCartAction,
+            addtoCartAction,cartsAdded,history}}>
                 
             <Header></Header>
             <section className="cart-main-area">
@@ -55,9 +57,7 @@ import Filter from './filter';
 const mapStateToProps = state => {
     let actualCarts = [...state.cartsReducer.carts];
     if(state.cartsReducer.isFiltered) {
-        console.log('coming');
         actualCarts = actualCarts.filter((cart) => {
-            console.log('entering');
             if(cart.price >= state.cartsReducer.range.min && cart.price <= state.cartsReducer.range.max) {
                 return cart;
             }
@@ -75,7 +75,8 @@ const mapStateToProps = state => {
         getItemsLoaderState:state.cartsReducer.getItemsLoaderState,
         sortType:state.cartsReducer.sortType,
         isFiltered:state.cartsReducer.isFiltered,
-        range:state.cartsReducer.range
+        range:state.cartsReducer.range,
+        cartsAdded:state.cartsReducer.cartsAdded
     }
 };
 
@@ -92,6 +93,9 @@ const mapDispatchToProps = dispatch => {
         },
         filterCartAction: (range,isFiltered) => {
             dispatch(filterCartAction(range,isFiltered));
+        },
+        addtoCartAction : (cart) => {
+            dispatch(addtoCartAction(cart));
         }
     }
 }

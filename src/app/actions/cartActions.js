@@ -20,7 +20,6 @@ export const getItemsAction = (callback) => dispatch => {
         error:false
     }));
     getItemsFromDb(response => {
-        console.log('service',response)
         if(response) {
             dispatch(updateLoaderState(generalConstants.getItemsLoaderState,{
                 fetching:false,
@@ -60,5 +59,33 @@ export const filterCartAction = (range,isFiltered) => ({
     payload:{
         range,
         isFiltered
+    }
+});
+
+export const addtoCartAction = (cart) => ({
+    type:generalConstants.addToCart,
+    payload:{
+        cart
+    }
+});
+
+export const removeFromCartAction = (cart) => ({
+    type:generalConstants.removeFromCart,
+    payload:{
+        cart,
+    }
+});
+
+export const addCartCountAction = (cart) => ({
+    type:generalConstants.addCountCart,
+    payload:{
+        cart,
+    }
+});
+
+export const substractCartCountAction = (cart) => ({
+    type:generalConstants.substractCountCart,
+    payload:{
+        cart,
     }
 });

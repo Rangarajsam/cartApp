@@ -7,6 +7,10 @@ const generalConstants = {
     sortLowtoHigh:'SORT_LOW_TO_HIGH',
     sortByDiscount:'DISCOUNT',
     searchCart:'SEARCH_CART',
-    filterCart:'FILTER_CART'
+    filterCart:'FILTER_CART',
+    addToCart:'ADD_TO_CART',
+    removeFromCart:'REMOVE_FROM_CART',
+    addCountCart:'ADD_COUNT',
+    substractCountCart:'SUBSTRACT_COUNT'
 }
 export default generalConstants;

@@ -13,7 +13,11 @@ const initialState = {
     range:{
         min:0,
         max:0
-    }
+    },
+    cartsAdded:[],
+    actualPayable:0,
+    discounted:0,
+    finalPayable:0
 };
 
 export default (state=initialState,action) => {
@@ -59,8 +63,128 @@ export default (state=initialState,action) => {
                 range:action.payload.range
             }
 
+        case generalConstants.addToCart :
+            let disCountedPrice = (action.payload.cart.price*action.payload.cart.discount)/100;
+            return {
+                ...state,
+                actualPayable:state.actualPayable + action.payload.cart.price,
+                discounted:state.discounted + disCountedPrice,
+                finalPayable:state.finalPayable + (action.payload.cart.price - disCountedPrice),
+                cartsAdded:[...state.cartsAdded].concat([{...action.payload.cart}])
+            }
+
+        case generalConstants.removeFromCart :
+            let disCountedPriceOnRemove = (action.payload.cart.price*action.payload.cart.discount)/100;
+            return {
+                ...state,
+                actualPayable:state.actualPayable - action.payload.cart.price,
+                discounted:state.discounted - disCountedPriceOnRemove,
+                finalPayable:state.finalPayable - (action.payload.cart.price - disCountedPriceOnRemove),
+                cartsAdded:[...state.cartsAdded].filter(cart => cart.id !== action.payload.cart.id)
+            }
+
+        case generalConstants.addCountCart :
+            let disCountedPriceOnAdd = (action.payload.cart.price*action.payload.cart.discount)/100;
+            return {
+                ...state,
+                actualPayable:state.actualPayable + action.payload.cart.price,
+                discounted:state.discounted + disCountedPriceOnAdd,
+                finalPayable:state.finalPayable + (action.payload.cart.price - disCountedPriceOnAdd)
+            }
+
+        case generalConstants.substractCountCart :
+            let disCountedPriceOnSubstract = (action.payload.cart.price*action.payload.cart.discount)/100;
+            return {
+                ...state,
+                actualPayable:state.actualPayable - action.payload.cart.price,
+                discounted:state.discounted - disCountedPriceOnSubstract,
+                finalPayable:state.finalPayable - (action.payload.cart.price - disCountedPriceOnSubstract),
+            }
+
         default :
             return state;
     }
 }
 
+// var carts =[
+//     {
+//         id: 9096,
+//         name: "Item1",
+//         price: 480,
+//         discount: 25,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     },
+//     {
+//         id: 9296,
+//         name: "Item2",
+//         price: 150,
+//         discount: 6,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     },
+//     {
+//         id: 3296,
+//         name: "Item3",
+//         price: 200,
+//         discount: 16,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     },
+//     {
+//         id: 8796,
+//         name: "Item4",
+//         price: 280,
+//         discount: 10,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     },
+//     {
+//         id: 9676,
+//         name: "Item5",
+//         price: 350,
+//         discount: 14,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     },
+//     {
+//         id: 8296,
+//         name: "Item6",
+//         price: 400,
+//         discount: 6,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     },
+//     {
+//         id: 7796,
+//         name: "Item7",
+//         price: 720,
+//         discount: 18,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     },
+//     {
+//         id: 3453,
+//         name: "Item8",
+//         price: 500,
+//         discount: 12,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     },
+//     {
+//         id: 3455,
+//         name: "Item9",
+//         price: 650,
+//         discount: 22,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     },
+//     {
+//         id: 9996,
+//         name: "Item10",
+//         price: 500,
+//         discount: 2,
+//         category: "literature",
+//         img_url: "http://lorempixel.com/500/600/technics/"
+//     }
+// ]
