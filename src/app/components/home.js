@@ -2,13 +2,13 @@ import React, {Component, useRef} from 'react';
 import { connect } from "react-redux";
 import {Link} from 'react-router-dom';
 import cartContext from '../contexts/cartContext';
-import { getItemsAction,sortByAction,searchCartAction } from '../actions/cartActions';
+import { getItemsAction,sortByAction,searchCartAction,filterCartAction } from '../actions/cartActions';
 import Loading from '../images/loader-icon.svg';
 import CartItem from './cartItem';
 import Sort from './sort';
 import generalConstants from '../constants/generalConstants';
 import Header from '../components/header';
-
+import Filter from './filter';
 
  class Home extends Component {
      constructor(props) {
@@ -24,10 +24,10 @@ import Header from '../components/header';
         })
      }
      render(){
-         const {carts,getItemsLoaderState,sortByAction,sortType,searchCartAction} = this.props;
+         const {carts,getItemsLoaderState,sortByAction,sortType,searchCartAction,filterCartAction} = this.props;
          console.log('Carts',carts);
         return (
-            <cartContext.Provider value={{sortByAction,sortType,searchCartAction}}>
+            <cartContext.Provider value={{carts,sortByAction,sortType,searchCartAction,filterCartAction}}>
                 
             <Header></Header>
             <section className="cart-main-area">
@@ -36,6 +36,7 @@ import Header from '../components/header';
                 </div>} 
                 <div className="filter-area">
                     <h1 className="gen-heading">Filters</h1>
+                    <Filter></Filter>
                 </div>
                 <div className="cart-area">
                     <Sort></Sort>
@@ -52,10 +53,29 @@ import Header from '../components/header';
 }
 
 const mapStateToProps = state => {
+    let actualCarts = [...state.cartsReducer.carts];
+    if(state.cartsReducer.isFiltered) {
+        console.log('coming');
+        actualCarts = actualCarts.filter((cart) => {
+            console.log('entering');
+            if(cart.price >= state.cartsReducer.range.min && cart.price <= state.cartsReducer.range.max) {
+                return cart;
+            }
+        })
+    }
+    if(state.cartsReducer.searchText.length > 0) {
+        actualCarts = actualCarts.filter((cart) => {
+            if( cart.name.toLowerCase().indexOf(state.cartsReducer.searchText.toLowerCase()) !== -1) {
+                return cart;
+            }
+         });
+    }
     return {
-        carts:state.cartsReducer.carts,
+        carts:actualCarts,
         getItemsLoaderState:state.cartsReducer.getItemsLoaderState,
-        sortType:state.cartsReducer.sortType
+        sortType:state.cartsReducer.sortType,
+        isFiltered:state.cartsReducer.isFiltered,
+        range:state.cartsReducer.range
     }
 };
 
@@ -69,6 +89,9 @@ const mapDispatchToProps = dispatch => {
         },
         searchCartAction: (text) => {
             dispatch(searchCartAction(text));
+        },
+        filterCartAction: (range,isFiltered) => {
+            dispatch(filterCartAction(range,isFiltered));
         }
     }
 }

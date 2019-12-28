@@ -7,7 +7,13 @@ const initialState = {
         fetched:false,
         error:false
     },
-    sortType:''
+    sortType:'',
+    searchText:'',
+    isFiltered:false,
+    range:{
+        min:0,
+        max:0
+    }
 };
 
 export default (state=initialState,action) => {
@@ -41,17 +47,20 @@ export default (state=initialState,action) => {
             }
 
         case generalConstants.searchCart :
-            let filteredCart = [...state.carts].filter((cart) => {
-               if( cart.name.toLowerCase().indexOf(action.payload.searchText.toLowerCase()) !== -1) {
-                   return cart;
-               }
-            });
             return {
                 ...state,
-                carts:filteredCart
+                searchText:action.payload.searchText
+            }
+
+        case generalConstants.filterCart :
+            return {
+                ...state,
+                isFiltered:action.payload.isFiltered,
+                range:action.payload.range
             }
 
         default :
             return state;
     }
 }
+

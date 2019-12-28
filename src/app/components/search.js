@@ -11,10 +11,16 @@
      const searchCart = (text) => {
         searchCartAction(text);
      }
+     const showSearch = () => {
+        if(search) {
+         searchCartAction('');
+        }
+      setSearch(!search)
+     }
      return (
         <div className="search-holder">
             { search && <input type="text" className="search-box" onChange={(e) => searchCart(e.target.value)} autoFocus/> }
-             <FontAwesomeIcon icon={faSearch} style={{color:'#fff',cursor:'pointer'}} size="lg" onClick={() => setSearch(!search)}/>
+             <FontAwesomeIcon icon={faSearch} style={{color:'#fff',cursor:'pointer'}} size="lg" onClick={showSearch}/>
         </div>
      )
  }

@@ -6,6 +6,7 @@ const generalConstants = {
     sortHightoLow:'SORT_HIGH_TO_LOW',
     sortLowtoHigh:'SORT_LOW_TO_HIGH',
     sortByDiscount:'DISCOUNT',
-    searchCart:'SEARCH_CART'
+    searchCart:'SEARCH_CART',
+    filterCart:'FILTER_CART'
 }
 export default generalConstants;

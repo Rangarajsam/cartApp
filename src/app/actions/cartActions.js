@@ -54,3 +54,11 @@ export const searchCartAction = (searchText) => ({
         searchText
     }
 });
+
+export const filterCartAction = (range,isFiltered) => ({
+    type:generalConstants.filterCart,
+    payload:{
+        range,
+        isFiltered
+    }
+});
