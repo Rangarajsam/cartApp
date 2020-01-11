@@ -28,9 +28,14 @@ export default (state=initialState,action) => {
                 getItemsLoaderState:action.payload.state
             }
         case generalConstants.getCarts :
+            let modifiedCart = [...action.payload.carts];
+            modifiedCart = modifiedCart.map((cart) => {
+                cart.addedCount = 0
+                return cart;
+            });
             return {
                 ...state,
-                carts : action.payload.carts
+                carts : modifiedCart
             }
 
         case generalConstants.sort :
@@ -65,40 +70,59 @@ export default (state=initialState,action) => {
 
         case generalConstants.addToCart :
             let disCountedPrice = (action.payload.cart.price*action.payload.cart.discount)/100;
+            let cart = {...action.payload.cart};
+            cart.addedCount = 1;
             return {
                 ...state,
                 actualPayable:state.actualPayable + action.payload.cart.price,
                 discounted:state.discounted + disCountedPrice,
                 finalPayable:state.finalPayable + (action.payload.cart.price - disCountedPrice),
-                cartsAdded:[...state.cartsAdded].concat([{...action.payload.cart}])
+                cartsAdded:[...state.cartsAdded].concat([cart])
             }
 
         case generalConstants.removeFromCart :
-            let disCountedPriceOnRemove = (action.payload.cart.price*action.payload.cart.discount)/100;
+            let addedCount = action.payload.cart.addedCount;
+            let cartPrice = action.payload.cart.price*addedCount;
+            let cartDiscount = action.payload.cart.discount;
+            let disCountedPriceOnRemove = (cartPrice*cartDiscount)/100;
             return {
                 ...state,
-                actualPayable:state.actualPayable - action.payload.cart.price,
+                actualPayable:state.actualPayable - cartPrice,
                 discounted:state.discounted - disCountedPriceOnRemove,
-                finalPayable:state.finalPayable - (action.payload.cart.price - disCountedPriceOnRemove),
+                finalPayable:state.finalPayable - (cartPrice - disCountedPriceOnRemove),
                 cartsAdded:[...state.cartsAdded].filter(cart => cart.id !== action.payload.cart.id)
             }
 
         case generalConstants.addCountCart :
             let disCountedPriceOnAdd = (action.payload.cart.price*action.payload.cart.discount)/100;
+            let cartsAdded = [...state.cartsAdded];
+            cartsAdded.forEach((cart,i,arr) => {
+               if (cart.id === action.payload.cart.id) {
+                arr[i].addedCount+=1
+               }
+            });
             return {
                 ...state,
                 actualPayable:state.actualPayable + action.payload.cart.price,
                 discounted:state.discounted + disCountedPriceOnAdd,
-                finalPayable:state.finalPayable + (action.payload.cart.price - disCountedPriceOnAdd)
+                finalPayable:state.finalPayable + (action.payload.cart.price - disCountedPriceOnAdd),
+                cartsAdded:cartsAdded
             }
 
         case generalConstants.substractCountCart :
             let disCountedPriceOnSubstract = (action.payload.cart.price*action.payload.cart.discount)/100;
+            let cartsAddedOnSubstract = [...state.cartsAdded];
+            cartsAddedOnSubstract.forEach((cart,i,arr) => {
+               if (cart.id === action.payload.cart.id) {
+                arr[i].addedCount-=1
+               }
+            });
             return {
                 ...state,
                 actualPayable:state.actualPayable - action.payload.cart.price,
                 discounted:state.discounted - disCountedPriceOnSubstract,
                 finalPayable:state.finalPayable - (action.payload.cart.price - disCountedPriceOnSubstract),
+                cartsAdded:cartsAddedOnSubstract
             }
 
         default :
